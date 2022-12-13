@@ -1,0 +1,28 @@
+.wheel {
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .segment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+    transform-origin: 100% 100%;
+    transform: rotate(60deg) skewY(-30deg);
+  }
+
+  .segment:nth-child(1) {
+    transform: rotate(60deg) skewY(-30deg);
+  }
+
+  .segment:nth-child(2) {
+    transform: rotate(120deg) skewY(-30deg);
+  }
+
+  .segment:nth-child(3) {
+    transform: rotate(180deg) skewY(-30deg);
+  }

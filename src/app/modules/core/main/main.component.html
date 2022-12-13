@@ -1,0 +1,6 @@
+<button (click)="getLocation()">Récupérer ma position actuelle</button>
+<p *ngIf="this.latitude && this.longitude">lat: {{this.latitude}} - long: {{this.longitude}}</p>
+<button (click)="getRestaurants()">Récupérer les restaurants proches</button>
+<app-wheel-spinner [options]="options" [size]=600 [spinWheel]="spinWheelEvent.asObservable()" (pickedIndex)="updatePicked($event)" (wheelRotated)="updateWheelStatus($event)"></app-wheel-spinner>
+<button (click)="spinWheel()">{{ this.wheelState === 'default' ? 'Tourner' : 'Reset'}}</button>
+
