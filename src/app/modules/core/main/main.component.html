@@ -1,6 +1,59 @@
-<button (click)="getLocation()">Récupérer ma position actuelle</button>
-<p *ngIf="this.latitude && this.longitude">lat: {{this.latitude}} - long: {{this.longitude}}</p>
-<button (click)="getRestaurants()">Récupérer les restaurants proches</button>
-<app-wheel-spinner [options]="options" [size]=600 [spinWheel]="spinWheelEvent.asObservable()" (pickedIndex)="updatePicked($event)" (wheelRotated)="updateWheelStatus($event)"></app-wheel-spinner>
-<button (click)="spinWheel()">{{ this.wheelState === 'default' ? 'Tourner' : 'Reset'}}</button>
+<div class="w-11/12 grid justify-items-center py-4">
+    <div class="flex w-full">
+      <div class="flex-1 flex-col w-1/2 flex items-center justify-items-center px-12">
+        <div class="w-full">
+          <div class="flex flex-row items-center justify-items-center justify-around">
+            <button mat-raised-button matTooltip="Récupérer ma position actuelle" class="w-4" (click)="getLocation()">
+              <svg class="h-full w-full text-gray-400/75"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </button>
+              <mat-form-field class="pt-5" appearance="outline" >
+                <input matInput placeholder="Pizza, Restaurant..." [formControl]="searchStringControl">
+              </mat-form-field>
+            <div class="flex flex-col items-center justify-items-center">
+              <div class="flex flex-row items-center">
+                <p class="px-2 pt-2 w-16 text-center">Rayon</p>
+                <mat-slider step="100" min="100" max="1000" [displayWith]="formatRadiusSliderLabel" showTickMarks discrete >
+                  <input matSliderThumb [(ngModel)]="radius">
+                </mat-slider>
+              </div>
+              <div class="flex flex-row items-center">
+                <p class="px-2 pt-2 w-16 text-center">Prix</p>
+                <mat-slider step="1" min="0" max="4" [disabled]="true" [displayWith]="formatPriceSliderLabel" showTickMarks discrete >
+                  <input value="0" [(ngModel)]="minPrice" matSliderStartThumb>
+                  <input value="4" [(ngModel)]="maxPrice" matSliderEndThumb>
+                </mat-slider>
+              </div>
+            </div>
+            <button *ngIf="!(latitude && longitude)" mat-raised-button disabled>Chercher</button>
+            <button *ngIf="latitude && longitude" mat-raised-button color="primary" (click)="getRestaurants()">Chercher</button>
+          </div>
+        </div>
+        <div class="h-80 w-full">
+          <app-leaflet-map>
+          </app-leaflet-map>
+        </div>
+        <div class="w-full">
+          <mat-card *ngFor="let option of options" class="w-full my-1">
+            <div class="p-2 flex flex-row items-center justify-items-center justify-between">
+              <p class="pt-2">{{option.value}}</p>
+              <mat-checkbox [(ngModel)]="option.selected" (ngModelChange)="updateWheelWithSelectedOptions()">
+              </mat-checkbox>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      <div class="flex-1 flex-col w-1/2 flex items-center justify-items-center px-12">
+        <ng-container *ngIf="options.length > 0">
+          <app-wheel-spinner [options]="selectedOptionsLabels" [size]=600 [spinWheel]="spinWheelEvent.asObservable()" (pickedIndex)="updatePicked($event)" (wheelRotated)="updateWheelStatus($event)"></app-wheel-spinner>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-4 z-10" (click)="spinWheel()">{{ this.wheelState === 'default' ? 'Tourner' : 'Reset'}}</button>
+          <p *ngIf="pickedOptionIndex">
+            Vous mangerez à {{selectedOptionsLabels[pickedOptionIndex]}} !
+          </p>
+        </ng-container>
+      </div>
+    </div>
+</div>
 

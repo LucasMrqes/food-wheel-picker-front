@@ -6,7 +6,8 @@ import { environment } from 'src/environments/environment';
 export class MapsService {
   constructor(private http: HttpClient) { }
 
-  getRestaurants(lat: number, lng: number) {
-    return this.http.get(`${environment.apiUrl}/api/maps`, { params: { keyword: 'restaurant', lat, lng } });
+  getRestaurants(lat: number, lng: number, params: { keyword?: string, radius?: number, minprice?: number, maxprice?: number } = {}) {
+    console.log({ ...params, lat, lng });
+    return this.http.get(`${environment.apiUrl}/api/maps`, { params: { ...params, lat, lng } });
   }
 }
